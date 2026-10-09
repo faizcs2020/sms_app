@@ -1,0 +1,245 @@
+{
+  "info": {
+    "_postman_id": "a750221d-sms-gateway-api-collection",
+    "name": "SMS Gateway API",
+    "description": "Postman API Collection for Express.js + MongoDB Android SMS Gateway API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login Device / User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deviceId\": \"{{deviceId}}\",\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "System & Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "health"]
+            }
+          }
+        },
+        {
+          "name": "Device Heartbeat",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deviceId\": \"{{deviceId}}\",\n  \"appVersion\": \"1.0.0\",\n  \"androidVersion\": \"14\",\n  \"batteryLevel\": 85,\n  \"networkType\": \"wifi\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/devices/heartbeat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "devices", "heartbeat"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Incoming Mobile SMS",
+      "item": [
+        {
+          "name": "Receive Mobile SMS",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deviceId\": \"{{deviceId}}\",\n  \"sender\": \"01711111111\",\n  \"message\": \"Your OTP is 123456\",\n  \"receivedAt\": \"2026-08-28T23:10:20.000Z\",\n  \"simSlot\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sms/mobile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sms", "mobile"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Outgoing SMS Queue",
+      "item": [
+        {
+          "name": "Queue Outgoing SMS",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deviceId\": \"{{deviceId}}\",\n  \"mobile\": \"01722222222\",\n  \"message\": \"Your transaction has been completed.\",\n  \"simSlot\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sms_queue",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sms_queue"]
+            }
+          }
+        },
+        {
+          "name": "Get / Claim Pending Queue Items",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/sms_queue?deviceId={{deviceId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sms_queue"],
+              "query": [
+                {
+                  "key": "deviceId",
+                  "value": "{{deviceId}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Mark SMS Sent",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deviceId\": \"{{deviceId}}\",\n  \"sentAt\": \"2026-08-28T23:25:00.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sms_queue/:id/sent",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sms_queue", ":id", "sent"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "SMS_OBJECT_ID_HERE"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Mark SMS Failed",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"deviceId\": \"{{deviceId}}\",\n  \"error\": \"Unable to send SMS via SIM\",\n  \"retry\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/sms_queue/:id/failed",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "sms_queue", ":id", "failed"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "SMS_OBJECT_ID_HERE"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "username",
+      "value": "gateway001"
+    },
+    {
+      "key": "password",
+      "value": "password123"
+    },
+    {
+      "key": "token",
+      "value": "JWT_TOKEN_HERE"
+    },
+    {
+      "key": "deviceId",
+      "value": "DEVICE-001"
+    }
+  ]
+}
